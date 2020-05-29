@@ -17,6 +17,7 @@ import NotFound from './NotFound';
 
 interface Props {
   className?: string;
+  isElectron?: boolean;
 }
 
 const NOT_FOUND: Route = {
@@ -30,7 +31,7 @@ const NOT_FOUND: Route = {
   text: 'Unknown'
 };
 
-function Content ({ className }: Props): React.ReactElement<Props> {
+function Content ({ className, isElectron }: Props): React.ReactElement<Props> {
   const location = useLocation();
   const { t } = useTranslation();
   const { isApiConnected, isApiReady } = useApi();
@@ -59,6 +60,7 @@ function Content ({ className }: Props): React.ReactElement<Props> {
               <ErrorBoundary trigger={name}>
                 <Component
                   basePath={`/${name}`}
+                  isElectron={isElectron}
                   location={location}
                   onStatusChange={queueAction}
                 />

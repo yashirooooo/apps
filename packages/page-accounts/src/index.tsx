@@ -18,7 +18,7 @@ import Vanity from './Vanity';
 
 export { useCounter };
 
-function AccountsApp ({ basePath, onStatusChange }: Props): React.ReactElement<Props> {
+function AccountsApp ({ basePath, isElectron, onStatusChange }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
   const { hasAccounts } = useAccounts();
   const items = useMemo(() => [
@@ -41,6 +41,8 @@ function AccountsApp ({ basePath, onStatusChange }: Props): React.ReactElement<P
     [hasAccounts]
   );
 
+  console.log(isElectron);
+
   return (
     <main className='accounts--App'>
       <HelpOverlay md={basicMd as string} />
@@ -62,7 +64,7 @@ function AccountsApp ({ basePath, onStatusChange }: Props): React.ReactElement<P
           <Vanity
             basePath={basePath}
             onStatusChange={onStatusChange}
-          />
+          />¨
         </Route>
         <Route>
           <Accounts

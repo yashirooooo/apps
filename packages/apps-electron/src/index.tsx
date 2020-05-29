@@ -38,7 +38,7 @@ ReactDOM.render(
             <Events>
               <AccountSidebar>
                 <HashRouter>
-                  <Apps />
+                  <Apps isElectron={true} />
                 </HashRouter>
               </AccountSidebar>
             </Events>

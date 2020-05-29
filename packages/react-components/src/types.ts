@@ -17,12 +17,14 @@ export type VoidFn = () => void;
 
 export interface BareProps {
   className?: string;
+  isElectron?: boolean;
 }
 
 export interface AppProps {
   basePath: string;
   className?: string;
   onStatusChange: (status: ActionStatus) => void;
+  isElectron?: boolean;
 }
 
 export type I18nProps = BareProps & WithTranslation;
