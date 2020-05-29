@@ -21,10 +21,10 @@ export interface BareProps {
 }
 
 export interface AppProps {
+  isElectron: boolean;
   basePath: string;
   className?: string;
   onStatusChange: (status: ActionStatus) => void;
-  isElectron?: boolean;
 }
 
 export type I18nProps = BareProps & WithTranslation;

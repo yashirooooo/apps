@@ -1,9 +1,10 @@
-// Copyright 2017-2020 @polkadot/apps authors & contributors
+// Copyright 2017-2020 @polkadot/apps-electron authors & contributors
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { BrowserWindow, app, screen } from 'electron';
+import { BrowserWindow, app, screen, dialog } from 'electron';
 import path from 'path';
+import { StoreAccountsService } from './services/StoreAccountsService';
 
 const environment = process.env.NODE_ENV || 'production';
 
@@ -13,7 +14,6 @@ function createWindow (): Promise<unknown> {
   const win = new BrowserWindow({
     height,
     webPreferences: {
-      enableRemoteModule: false,
       nodeIntegration: true
     },
     width
@@ -30,4 +30,14 @@ function createWindow (): Promise<unknown> {
   return win.loadFile(mainFilePath);
 }
 
-app.whenReady().then(createWindow).catch(console.error);
+const main = async () => {
+  await createWindow();
+  const storeAccounts = new StoreAccountsService();
+
+  storeAccounts.save('newAddress');
+  const stored = storeAccounts.get('newAddress');
+
+  await dialog.showMessageBox({ message: stored });
+};
+
+app.whenReady().then(main).catch(console.error);

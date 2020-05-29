@@ -1,4 +1,4 @@
-// Copyright 2017-2020 @polkadot/apps authors & contributors
+// Copyright 2017-2020 @polkadot/apps-electron authors & contributors
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
@@ -18,6 +18,7 @@ import { BlockAuthors, Events } from '@polkadot/react-query';
 import AccountSidebar from '@polkadot/app-accounts/Sidebar';
 import { Api } from '@polkadot/react-api';
 import Apps from '@polkadot/apps/Apps';
+import { StoreAccountsService } from './services/StoreAccountsService';
 
 const rootId = 'root';
 const rootElement = document.getElementById(rootId);
@@ -28,6 +29,13 @@ if (!rootElement) {
 }
 
 console.log('Opened in electron app');
+
+const storeAccounts = new StoreAccountsService();
+
+storeAccounts.save('newAddress');
+const stored = storeAccounts.get('newAddress');
+
+console.log(stored);
 
 ReactDOM.render(
   <Suspense fallback='...'>

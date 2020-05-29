@@ -22,6 +22,7 @@ import { useTranslation } from '../../translate';
 import CreateConfirmation from './CreateConfirmation';
 
 interface Props extends ModalProps {
+  isElectron: boolean;
   className?: string;
   seed?: string;
   type?: KeypairType;
@@ -135,9 +136,11 @@ export function downloadAccount ({ json, pair }: CreateResult): void {
   InputAddress.setLastValue('account', pair.address);
 }
 
-function createAccount (suri: string, pairType: KeypairType, { genesisHash, name, tags = [] }: CreateOptions, password: string, success: string): ActionStatus {
+function createAccount (isElectron: boolean, suri: string, pairType: KeypairType, { genesisHash, name, tags = [] }: CreateOptions, password: string, success: string): ActionStatus {
   // we will fill in all the details below
   const status = { action: 'create' } as ActionStatus;
+
+  console.log(isElectron);
 
   try {
     const result = keyring.addUri(suri, password, { genesisHash, name, tags }, pairType);
@@ -156,7 +159,7 @@ function createAccount (suri: string, pairType: KeypairType, { genesisHash, name
   return status;
 }
 
-function Create ({ className = '', onClose, onStatusChange, seed: propsSeed, type: propsType }: Props): React.ReactElement<Props> {
+function Create ({ className = '', isElectron, onClose, onStatusChange, seed: propsSeed, type: propsType }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
   const { api, isDevelopment } = useApi();
   const [{ address, deriveError, derivePath, isSeedValid, pairType, seed, seedType }, setAddress] = useState<AddressState>(generateSeed(propsSeed, '', propsSeed ? 'raw' : 'bip', propsType));
@@ -220,13 +223,13 @@ function Create ({ className = '', onClose, onStatusChange, seed: propsSeed, typ
       }
 
       const options = { genesisHash: isDevelopment ? undefined : api.genesisHash.toString(), name: name.trim() };
-      const status = createAccount(`${seed}${derivePath}`, pairType, options, password, t<string>('created account'));
+      const status = createAccount(isElectron, `${seed}${derivePath}`, pairType, options, password, t<string>('created account'));
 
       toggleConfirmation();
       onStatusChange(status);
       onClose();
     },
-    [api, derivePath, isDevelopment, isValid, name, onClose, onStatusChange, pairType, password, seed, t, toggleConfirmation]
+    [isElectron, api, derivePath, isDevelopment, isValid, name, onClose, onStatusChange, pairType, password, seed, t, toggleConfirmation]
   );
 
   return (

@@ -41,6 +41,9 @@ function createWebpack () {
         filename: 'electron.js',
         path: path.join(__dirname, '/build')
       },
+      resolve: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx']
+      },
       target: 'electron-main'
     }
   ];

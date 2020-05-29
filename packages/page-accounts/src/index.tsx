@@ -41,8 +41,6 @@ function AccountsApp ({ basePath, isElectron, onStatusChange }: Props): React.Re
     [hasAccounts]
   );
 
-  console.log(isElectron);
-
   return (
     <main className='accounts--App'>
       <HelpOverlay md={basicMd as string} />
@@ -69,6 +67,7 @@ function AccountsApp ({ basePath, isElectron, onStatusChange }: Props): React.Re
         <Route>
           <Accounts
             basePath={basePath}
+            isElectron={isElectron}
             onStatusChange={onStatusChange}
           />
         </Route>
