@@ -17,6 +17,7 @@ import { Api } from '@polkadot/react-api';
 import Queue from '@polkadot/react-components/Status/Queue';
 import { BlockAuthors, Events } from '@polkadot/react-query';
 import settings from '@polkadot/ui-settings';
+import { StoreAccountsService } from './services/StoreAccountsService';
 
 import Apps from './Apps';
 
@@ -44,7 +45,7 @@ ReactDOM.render(
             <Events>
               <AccountSidebar>
                 <HashRouter>
-                  <Apps />
+                  <Apps storeAccountsService={new StoreAccountsService()} />
                 </HashRouter>
               </AccountSidebar>
             </Events>

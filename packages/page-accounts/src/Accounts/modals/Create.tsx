@@ -2,16 +2,12 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { ActionStatus } from '@polkadot/react-components/Status/types';
-import { CreateResult } from '@polkadot/ui-keyring/types';
 import { KeypairType } from '@polkadot/util-crypto/types';
 import { ModalProps } from '../../types';
-
-import FileSaver from 'file-saver';
 import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { DEV_PHRASE } from '@polkadot/keyring/defaults';
-import { AddressRow, Button, Dropdown, Expander, Input, InputAddress, Modal, Password } from '@polkadot/react-components';
+import { AddressRow, Button, Dropdown, Expander, Input, Modal, Password } from '@polkadot/react-components';
 import { useApi, useToggle } from '@polkadot/react-hooks';
 import keyring from '@polkadot/ui-keyring';
 import uiSettings from '@polkadot/ui-settings';
@@ -20,9 +16,10 @@ import { keyExtractSuri, mnemonicGenerate, mnemonicValidate, randomAsU8a } from 
 
 import { useTranslation } from '../../translate';
 import CreateConfirmation from './CreateConfirmation';
+import { IStoreAccountsService } from '@polkadot/apps/services/StoreAccountsService';
 
 interface Props extends ModalProps {
-  isElectron: boolean;
+  storeAccountsService: IStoreAccountsService;
   className?: string;
   seed?: string;
   type?: KeypairType;
@@ -38,12 +35,6 @@ interface AddressState {
   pairType: KeypairType;
   seed: string;
   seedType: SeedType;
-}
-
-interface CreateOptions {
-  genesisHash?: string;
-  name: string;
-  tags?: string[];
 }
 
 const DEFAULT_PAIR_TYPE = 'sr25519';
@@ -129,37 +120,7 @@ function updateAddress (seed: string, derivePath: string, seedType: SeedType, pa
   };
 }
 
-export function downloadAccount ({ json, pair }: CreateResult): void {
-  const blob = new Blob([JSON.stringify(json)], { type: 'application/json; charset=utf-8' });
-
-  FileSaver.saveAs(blob, `${pair.address}.json`);
-  InputAddress.setLastValue('account', pair.address);
-}
-
-function createAccount (isElectron: boolean, suri: string, pairType: KeypairType, { genesisHash, name, tags = [] }: CreateOptions, password: string, success: string): ActionStatus {
-  // we will fill in all the details below
-  const status = { action: 'create' } as ActionStatus;
-
-  console.log(isElectron);
-
-  try {
-    const result = keyring.addUri(suri, password, { genesisHash, name, tags }, pairType);
-    const { address } = result.pair;
-
-    status.account = address;
-    status.status = 'success';
-    status.message = success;
-
-    downloadAccount(result);
-  } catch (error) {
-    status.status = 'error';
-    status.message = (error as Error).message;
-  }
-
-  return status;
-}
-
-function Create ({ className = '', isElectron, onClose, onStatusChange, seed: propsSeed, type: propsType }: Props): React.ReactElement<Props> {
+function Create ({ className = '', onClose, onStatusChange, seed: propsSeed, storeAccountsService, type: propsType }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
   const { api, isDevelopment } = useApi();
   const [{ address, deriveError, derivePath, isSeedValid, pairType, seed, seedType }, setAddress] = useState<AddressState>(generateSeed(propsSeed, '', propsSeed ? 'raw' : 'bip', propsType));
@@ -223,13 +184,13 @@ function Create ({ className = '', isElectron, onClose, onStatusChange, seed: pr
       }
 
       const options = { genesisHash: isDevelopment ? undefined : api.genesisHash.toString(), name: name.trim() };
-      const status = createAccount(isElectron, `${seed}${derivePath}`, pairType, options, password, t<string>('created account'));
+      const status = storeAccountsService.createAccount(`${seed}${derivePath}`, pairType, options, password, t<string>('created account'));
 
       toggleConfirmation();
       onStatusChange(status);
       onClose();
     },
-    [isElectron, api, derivePath, isDevelopment, isValid, name, onClose, onStatusChange, pairType, password, seed, t, toggleConfirmation]
+    [storeAccountsService, api, derivePath, isDevelopment, isValid, name, onClose, onStatusChange, pairType, password, seed, t, toggleConfirmation]
   );
 
   return (

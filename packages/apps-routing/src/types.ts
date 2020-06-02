@@ -4,8 +4,10 @@
 
 import { SemanticICONS } from 'semantic-ui-react/dist/commonjs/generic';
 import { AppProps, BareProps } from '@polkadot/react-components/types';
+import { IStoreAccountsService } from '@polkadot/apps/services/StoreAccountsService';
 
 export interface RouteProps extends AppProps, BareProps {
+  storeAccountsService: IStoreAccountsService;
   location: any;
 }
 

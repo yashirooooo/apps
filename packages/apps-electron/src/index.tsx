@@ -30,13 +30,6 @@ if (!rootElement) {
 
 console.log('Opened in electron app');
 
-const storeAccounts = new StoreAccountsService();
-
-storeAccounts.save('newAddress');
-const stored = storeAccounts.get('newAddress');
-
-console.log(stored);
-
 ReactDOM.render(
   <Suspense fallback='...'>
     <ThemeProvider theme={theme}>
@@ -46,7 +39,7 @@ ReactDOM.render(
             <Events>
               <AccountSidebar>
                 <HashRouter>
-                  <Apps isElectron={true} />
+                  <Apps storeAccountsService={new StoreAccountsService()} />
                 </HashRouter>
               </AccountSidebar>
             </Events>

@@ -18,7 +18,7 @@ import Vanity from './Vanity';
 
 export { useCounter };
 
-function AccountsApp ({ basePath, isElectron, onStatusChange }: Props): React.ReactElement<Props> {
+function AccountsApp ({ basePath, onStatusChange, storeAccountsService }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
   const { hasAccounts } = useAccounts();
   const items = useMemo(() => [
@@ -62,13 +62,14 @@ function AccountsApp ({ basePath, isElectron, onStatusChange }: Props): React.Re
           <Vanity
             basePath={basePath}
             onStatusChange={onStatusChange}
-          />¨
+            storeAccountsService={storeAccountsService}
+          />
         </Route>
         <Route>
           <Accounts
             basePath={basePath}
-            isElectron={isElectron}
             onStatusChange={onStatusChange}
+            storeAccountsService={storeAccountsService}
           />
         </Route>
       </Switch>

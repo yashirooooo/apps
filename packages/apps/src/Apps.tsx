@@ -32,7 +32,7 @@ function saveSidebar (sidebar: SidebarState): SidebarState {
   return store.set('sidebar', sidebar) as SidebarState;
 }
 
-function Apps ({ className = '', isElectron = false }: Props): React.ReactElement<Props> {
+function Apps ({ className = '', storeAccountsService }: Props): React.ReactElement<Props> {
   const { systemChain, systemName } = useApi();
   const [sidebar, setSidebar] = useState<SidebarState>({
     isCollapsed: false,
@@ -88,7 +88,7 @@ function Apps ({ className = '', isElectron = false }: Props): React.ReactElemen
           toggleMenu={_toggleMenu}
         />
         <Signer>
-          <Content isElectron={isElectron} />
+          <Content storeAccountsService={storeAccountsService} />
         </Signer>
         <ConnectingOverlay />
         <div id={PORTAL_ID} />

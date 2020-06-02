@@ -6,7 +6,6 @@ import { app, BrowserWindow, dialog, screen } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import { features } from './featureToggles';
-import { StoreAccountsService } from './services/StoreAccountsService';
 
 const ENV = process.env.NODE_ENV || 'production';
 const isDev = ENV === 'development';
@@ -39,13 +38,6 @@ const onReady = async () => {
   if (features.autoUpdater) {
     await autoUpdater.checkForUpdatesAndNotify();
   }
-
-  const storeAccounts = new StoreAccountsService();
-
-  storeAccounts.save('newAddress');
-  const stored = storeAccounts.get('newAddress');
-
-  await dialog.showMessageBox({ message: stored });
 };
 
 app.whenReady().then(onReady).catch(console.error);

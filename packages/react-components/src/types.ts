@@ -12,18 +12,19 @@ import { AccountId, Index } from '@polkadot/types/interfaces';
 import { ButtonProps } from './Button/types';
 import { InputAddressProps } from './InputAddress/types';
 import { TxCallback, TxFailedCallback } from './Status/types';
+import { IStoreAccountsService } from '@polkadot/apps/services/StoreAccountsService';
 
 export type VoidFn = () => void;
 
 export interface BareProps {
   className?: string;
-  isElectron?: boolean;
+  storeAccountsService?: IStoreAccountsService;
 }
 
 export interface AppProps {
-  isElectron: boolean;
   basePath: string;
   className?: string;
+  storeAccountsService?: IStoreAccountsService;
   onStatusChange: (status: ActionStatus) => void;
 }
 

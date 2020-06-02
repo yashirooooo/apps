@@ -91,7 +91,7 @@ function sortAccounts (addresses: string[], favorites: string[]): SortedAccount[
     );
 }
 
-function Overview ({ className = '', isElectron, onStatusChange }: Props): React.ReactElement<Props> {
+function Overview ({ className = '', onStatusChange, storeAccountsService }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
   const { api } = useApi();
   const { allAccounts } = useAccounts();
@@ -163,9 +163,9 @@ function Overview ({ className = '', isElectron, onStatusChange }: Props): React
       <BannerClaims />
       {isCreateOpen && (
         <CreateModal
-          isElectron={isElectron}
           onClose={toggleCreate}
           onStatusChange={onStatusChange}
+          storeAccountsService={storeAccountsService}
         />
       )}
       {isImportOpen && (
