@@ -42,7 +42,7 @@ function createWebpack () {
         path: path.join(__dirname, '/build')
       },
       resolve: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx']
+        extensions: ['.js', '.jsx', '.json', '.ts', '.tsx']
       },
       target: 'electron-main'
     }
