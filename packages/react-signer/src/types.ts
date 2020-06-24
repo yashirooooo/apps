@@ -9,6 +9,7 @@ export interface AddressFlags {
   isHardware: boolean;
   isMultisig: boolean;
   isProxied: boolean;
+  isSignedOffline: boolean;
   isQr: boolean;
   isUnlockable: boolean;
   threshold: number;

@@ -353,7 +353,9 @@ function TxSigned ({ className, currentItem, requestAddress }: Props): React.Rea
                   ? t<string>('Sign via Qr')
                   : isSubmit
                     ? t<string>('Sign and Submit')
-                    : t<string>('Sign (no submission)')
+                    : flags.isSignedOffline
+                      ? t<string>('Send Offline')
+                      : t<string>('Sign (no submission)')
               }
               onClick={_doStart}
               tabIndex={2}
