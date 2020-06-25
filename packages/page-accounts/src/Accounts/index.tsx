@@ -176,14 +176,6 @@ function Overview ({ className = '', onStatusChange }: Props): React.ReactElemen
           onStatusChange={onStatusChange}
         />
       )}
-      {
-        isSignedOfflineOpen && (
-          <CreateOfflineSignedAccount
-            onClose={toggleCreateSignedOffline}
-            onStatusChange={onStatusChange}
-            />
-        )
-      }
       {isMultisigOpen && (
         <Multisig
           onClose={toggleMultisig}

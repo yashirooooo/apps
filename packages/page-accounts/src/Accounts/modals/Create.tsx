@@ -11,7 +11,7 @@ import FileSaver from 'file-saver';
 import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { DEV_PHRASE } from '@polkadot/keyring/defaults';
-import { AddressRow, Button, Dropdown, Expander, Input, InputAddress, Modal } from '@polkadot/react-components';
+import { AddressRow, Button, Dropdown, Expander, Input, InputAddress, Modal, Toggle, Label } from '@polkadot/react-components';
 import { useApi, useToggle } from '@polkadot/react-hooks';
 import keyring from '@polkadot/ui-keyring';
 import uiSettings from '@polkadot/ui-settings';
@@ -166,6 +166,7 @@ function Create ({ className = '', onClose, onStatusChange, seed: propsSeed, typ
   const { api, isDevelopment } = useApi();
   const [{ address, deriveError, derivePath, isSeedValid, pairType, seed, seedType }, setAddress] = useState<AddressState>(generateSeed(propsSeed, '', propsSeed ? 'raw' : 'bip', propsType));
   const [isConfirmationOpen, toggleConfirmation] = useToggle();
+  const [isSignedOffline, toggleSignOffline] = useState(false);
   const [{ isNameValid, name }, setName] = useState({ isNameValid: false, name: '' });
   const [{ isPasswordValid, password }, setPassword] = useState({ isPasswordValid: false, password: '' });
   const isValid = !!address && !deriveError && isNameValid && isPasswordValid && isSeedValid;
@@ -348,6 +349,21 @@ function Create ({ className = '', onClose, onStatusChange, seed: propsSeed, typ
               <p>{t<string>('The derivation path allows you to create different accounts from the same base mnemonic.')}</p>
             </Modal.Column>
           </Modal.Columns>
+          <Modal.Columns>
+            <Modal.Column>
+              <div className='float--right'>
+                <Toggle
+                  checked={isSignedOffline}
+                  defaultChecked={false}
+                  label={t<string>('Sign offline')}
+                  onChange={() => { console.log('hello') }}
+                />
+              </div>
+            </Modal.Column>
+            <Modal.Column>
+              <p>{t<string>('You can make an account with the option to not have your encrypted seed stored in localstorage. When you want to sign and submit a transaction with this account, you will have to export the payload to use an offline signer (e.g. Parity Signer, Ledger, etc.) and paste back the signature.')}</p>
+            </Modal.Column>
+          </Modal.Columns>
         </Expander>
       </Modal.Content>
       <Modal.Actions onCancel={onClose}>
@@ -367,5 +383,9 @@ export default React.memo(styled(Create)`
   .accounts--Creator-advanced {
     margin-top: 1rem;
     overflow: visible;
+  }
+  
+  .float--right {
+    float: right;
   }
 `);

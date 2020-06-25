@@ -15,7 +15,7 @@ function Column ({ children, className = '' }: ColumnProps): React.ReactElement<
 
 export default React.memo(styled(Column)`
   padding: 0.25em 0;
-
+  
   &:nth-child(1) {
     flex: 100%;
   }
