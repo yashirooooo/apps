@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.47.0-beta.x
+
+- Default (via toggle) to only last 25% of eras for payouts
+- Allow retracting of tips by proposer
+- Enable the full retrieval of all Map/Doublemap entries
+
 ## 0.46.1 Jun 22, 2020
 
 - I18n for es (thanks to https://github.com/wimel)
