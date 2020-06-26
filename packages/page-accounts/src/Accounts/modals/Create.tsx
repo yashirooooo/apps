@@ -43,6 +43,7 @@ interface AddressState {
 
 interface CreateOptions {
   genesisHash?: string;
+  isSignedOffline?: boolean;
   name: string;
   tags?: string[];
 }
@@ -136,12 +137,12 @@ export function downloadAccount ({ json, pair }: CreateResult): void {
   FileSaver.saveAs(blob, `${pair.address}.json`);
 }
 
-function createAccount (suri: string, pairType: KeypairType, { genesisHash, name, tags = [] }: CreateOptions, password: string, success: string): ActionStatus {
+function createAccount (suri: string, pairType: KeypairType, { genesisHash, isSignedOffline, name, tags = [] }: CreateOptions, password: string, success: string): ActionStatus {
   // we will fill in all the details below
   const status = { action: 'create' } as ActionStatus;
 
   try {
-    const result = keyring.addUri(suri, password, { genesisHash, name, tags }, pairType);
+    const result = keyring.addUri(suri, password, { genesisHash, isSignedOffline, name, tags }, pairType);
     const { address } = result.pair;
 
     status.account = address;
@@ -213,20 +214,28 @@ function Create ({ className = '', onClose, onStatusChange, seed: propsSeed, typ
     []
   );
 
+  const _onToggleIsSignedOffline = useCallback(
+    () => toggleSignOffline(!isSignedOffline),
+    []
+  );
+
   const _onCommit = useCallback(
     (): void => {
       if (!isValid) {
         return;
       }
 
-      const options = { genesisHash: isDevelopment ? undefined : api.genesisHash.toString(), name: name.trim() };
+      const options = { genesisHash: isDevelopment ? undefined : api.genesisHash.toString(), isSignedOffline, name: name.trim() };
+
+      console.log('options => ', options);
+      
       const status = createAccount(`${seed}${derivePath}`, pairType, options, password, t<string>('created account'));
 
       toggleConfirmation();
       onStatusChange(status);
       onClose();
     },
-    [api, derivePath, isDevelopment, isValid, name, onClose, onStatusChange, pairType, password, seed, t, toggleConfirmation]
+    [api, derivePath, isDevelopment, isSignedOffline, isValid, name, onClose, onStatusChange, pairType, password, seed, t, toggleConfirmation]
   );
 
   return (
@@ -354,14 +363,13 @@ function Create ({ className = '', onClose, onStatusChange, seed: propsSeed, typ
               <div className='float--right'>
                 <Toggle
                   checked={isSignedOffline}
-                  defaultChecked={false}
                   label={t<string>('Sign offline')}
-                  onChange={() => { console.log('hello') }}
+                  onChange={_onToggleIsSignedOffline}
                 />
               </div>
             </Modal.Column>
             <Modal.Column>
-              <p>{t<string>('You can make an account with the option to not have your encrypted seed stored in localstorage. When you want to sign and submit a transaction with this account, you will have to export the payload to use an offline signer (e.g. Parity Signer, Ledger, etc.) and paste back the signature.')}</p>
+              <p>{t<string>('You can make an account with the option to only sign transactions offline. When you want to sign and submit a transaction with this account, you will have to export the payload to use an offline signer (e.g. Parity Signer, Ledger, etc.) and paste back the signature.')}</p>
             </Modal.Column>
           </Modal.Columns>
         </Expander>
